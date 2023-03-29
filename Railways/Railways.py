@@ -15,7 +15,8 @@ import qrcode
 from reportlab.pdfgen import canvas
 from PyPDF2 import PdfWriter, PdfReader
 from pdf_mail import sendpdf
-
+from threading import *
+from tkthread import *
 ROW = 1
 passdata = []
 
@@ -160,8 +161,8 @@ def verifyotp():
         label01.place(x=60, y=200)
         entry01 = Entry(root, show='*', bd=3)
         entry01.place(x=270, y=200)
-        next = Button(mainframe, text="Next->", command=lambda: next1(entry0, entry01), bd=3)
-        next.place(x=150, y=350)
+        nex = Button(mainframe, text="Next->", command=lambda: next1(entry0, entry01), bd=3)
+        nex.place(x=150, y=350)
         root.mainloop()
     else:
         messagebox.showinfo('', 'Incorrect OTP,Please Re-enter!!')
@@ -181,11 +182,11 @@ def next1(entry0, entry01):
     p2 = entry01.get()
     if p1 == p2 and len(p1) >= 8:
         root.title("Railways Reservations")
-        root.geometry('1200x780')
+        root.geometry('1200x700')
 
         bg = ImageTk.PhotoImage(Image.open("005.jpg"))
         label1 = Label(root, image=bg)
-        label1.place(x=0, y=150)
+        label1.place(x=0, y=0)
         label03 = Label(root, text="Registration Completed Successfully, Please Login To Proceed", font=('Arial', 15))
         label03.place(x=300, y=300)
         loingbutton = Button(root, text='Login', bd=3, font=('Arial', 15), command=login)
@@ -220,7 +221,7 @@ def createdatabase():
         cursor.execute(
             "create table train(tid int,tname varchar(100),ttype varchar(30),tsource varchar(20),tdestination varchar(30),jdate date,jtime timestamp,price int);")
         cursor.execute(
-            "insert into train values(101,'Nanda Devi AC Express','A/C','HYDERABAD','BANGLORE','2023-2-21','2023-2-21 18:00:00',1200),(102,'Nagpur-Amritsar AC Superfast Express','A\C-Chair','NAGPUR','AMRITSAR','2023-1-20','2023-1-20 20:30:00',1200),(102,'Nagpur-Amritsar AC Superfast Express','A\C-First Class','NAGPUR','AMRITSAR','2023-3-29','2023-3-29 12:10:00',1200),(103,'Gujarat express','Non-A/C','GUJRAT','HYDERABAD','2023-2-26','2023-2-26 22:00:00',800),(105,'Gujarat express','A/C','GUJRAT','HYDERABAD','2023-1-17','2023-1-17 12:20:00',1300),(104,'Flying Ranee Express','Non-A/C-Chair','HYDERABAD','CHENNAI','2023-1-20','2023-1-20 12:00:00',1000),(106,'Rajdhani Express','A/C','DELHI','HYDERABAD','2023-2-20','2023-2-20 16:50:00',1700),(107,'Rajdhani Express','A/C-Chair','DELHI','HYDERABAD','2023-2-20','2023-2-20 20:00:00',1400),(101,'Nanda Devi AC Express','A/C','HYDERABAD','BANGLORE','2023-2-15','2023-2-15 19:40:00',1900),(108,'Nagpur-Amritsar AC Superfast Express','A\C-Chair','NAGPUR','AMRITSAR','2023-2-10','2023-2-10 17:50:00',1500),(102,'Nagpur-Amritsar AC Superfast Express','A\C-First Class','NAGPUR','AMRITSAR','2023-2-20','2023-2-20 20:15:00',1900),(103,'Gujarat express','Non-A/C','GUJRAT','HYDERABAD','2023-2-20','2023-2-20 21:10:00',1000),(105,'Gujarat express','A/C','GUJRAT','HYDERABAD','2023-2-20','2023-2-20 3:40:00',1800),(104,'Flying Ranee Express','Non-A/C-Chair','HYDERABAD','CHENNAI','2023-2-18','2023-2-18 3:10:00',1200),(106,'Rajdhani Express','A/C','DELHI','HYDERABAD','2023-2-18','2023-2-18 10:20:00',2000),(107,'Rajdhani Express','A/C-Chair','DELHI','HYDERABAD','2023-2-18','2023-2-18 12:50:00',1300);")
+            "insert into train values(101,'Nanda Devi AC Express','A/C','HYDERABAD','BANGLORE','2023-4-21','2023-4-21 18:00:00',1200),(102,'Nagpur-Amritsar AC Superfast Express','A\C-Chair','NAGPUR','AMRITSAR','2023-4-20','2023-4-20 20:30:00',1200),(102,'Nagpur-Amritsar AC Superfast Express','A\C-First Class','NAGPUR','AMRITSAR','2023-3-29','2023-3-29 12:10:00',1200),(103,'Gujarat express','Non-A/C','GUJRAT','HYDERABAD','2023-2-26','2023-2-26 22:00:00',800),(105,'Gujarat express','A/C','GUJRAT','HYDERABAD','2023-1-17','2023-1-17 12:20:00',1300),(104,'Flying Ranee Express','Non-A/C-Chair','HYDERABAD','CHENNAI','2023-1-20','2023-1-20 12:00:00',1000),(106,'Rajdhani Express','A/C','DELHI','HYDERABAD','2023-2-20','2023-2-20 16:50:00',1700),(107,'Rajdhani Express','A/C-Chair','DELHI','HYDERABAD','2023-2-20','2023-2-20 20:00:00',1400),(101,'Nanda Devi AC Express','A/C','HYDERABAD','BANGLORE','2023-2-15','2023-2-15 19:40:00',1900),(108,'Nagpur-Amritsar AC Superfast Express','A\C-Chair','NAGPUR','AMRITSAR','2023-2-10','2023-2-10 17:50:00',1500),(102,'Nagpur-Amritsar AC Superfast Express','A\C-First Class','NAGPUR','AMRITSAR','2023-2-20','2023-2-20 20:15:00',1900),(103,'Gujarat express','Non-A/C','GUJRAT','HYDERABAD','2023-2-20','2023-2-20 21:10:00',1000),(105,'Gujarat express','A/C','GUJRAT','HYDERABAD','2023-2-20','2023-2-20 3:40:00',1800),(104,'Flying Ranee Express','Non-A/C-Chair','HYDERABAD','CHENNAI','2023-2-18','2023-2-18 3:10:00',1200),(106,'Rajdhani Express','A/C','DELHI','HYDERABAD','2023-2-18','2023-2-18 10:20:00',2000),(107,'Rajdhani Express','A/C-Chair','DELHI','HYDERABAD','2023-2-18','2023-2-18 12:50:00',1300);")
         cursor.execute('commit;')
 
 
@@ -243,7 +244,7 @@ def register1():
     label1 = Label(mainframe, image=bg)
     label1.pack()
     root.title("Railways Reservations")
-    root.geometry("1200x780")
+    root.geometry("1200x700")
 
     label1 = Label(mainframe, image=bg)
     label1.pack()
@@ -356,6 +357,8 @@ def afterlogin():
                       bd=3, command=checkstauts)
     checkbut.place(x=70, y=270)
     back("LOGOUT")
+    userlabel=Label(mainframe,text="Logged in:-"+uemail,bg="white",font=("Arial",10))
+    userlabel.place(x=700,y=20)
     root.mainloop()
 
 
@@ -504,7 +507,7 @@ def payment():
     backbut = Button(mainframe, text="Back", bd=3, bg='white', command=warning)
     backbut.place(x=850, y=600)
     back('LOGOUT')
-    confirmbut = Button(framebg, text="Confirm Booking", bd=3, bg='white', command=lambda: sendmail(methodcombo))
+    confirmbut = Button(framebg, text="Confirm Booking", bd=3, bg='white', command=lambda: call_nosync(sendmail(methodcombo)))
     confirmbut.grid(row=3, column=4)
     root.mainloop()
 
@@ -517,89 +520,90 @@ def sendmail(methodcombo):
         except con.errors.DatabaseError:
             messagebox.showinfo('', "Incorrect Passenger Data, Please Re-check!!")
             newbooking()
-        bg = ImageTk.PhotoImage(Image.open("005.jpg"))
-        mainframe = Frame(root, bg='white')
-        mainframe.place(x=0, y=0)
-        label1 = Label(mainframe, image=bg)
-        label1.pack()
-        framebg = Frame(mainframe, bg='white')
-        framebg.place(x=80, y=100, relheight=0.8, relwidth=0.8)
-        label = Label(framebg, text='Tickets Confirmed! You will Recieve Tickets on Registerd Email Address',
-                      font=('Arial', 20), bg='white')
-        label.place(x=30, y=200)
-        backbut = Button(mainframe, text="Back", bd=3, bg='white', command=afterlogin)
-        backbut.place(x=850, y=600)
-        back('LOGOUT')
-
-        msg1 = ''
-        msg = "IRCTC\n\n\nYour Ticket is Confirmed\nBooking date:-{}\n".format(
-            datetime.date.today().strftime("%d-%m-%y"))
-        pdf = FPDF()
-        for data in passdata:
-            msg1 = msg1 + "\nPassenger Details:-\nPNR:-{}\nPassenger Name:-{}\nPhone:-{}\nAge:-{}\nGender:-{}\nAadhar:-{}\nSeat No:-{}\n\nPayment Method:-{}\n".format(
-                data[0],
-                data[1], data[
-                    2], data[3],
-                data[4],
-                data[5], data[7], methodcombo.get())
-
-            msg1 = msg1 + "\nTrain Details:-\nTrain Name:-{}\nClass:-{}\nSource:-{}\nDestination:-{}\nDate-Time:-{}\nCost:-Rs{}".format(
-                traindata[0], traindata[1],
-                traindata[
-                    2], traindata[3],
-                traindata[4].strftime("%d-%m-%Y %H:%M:%S"), cost)
-
-            qr = qrcode.QRCode(version=1,
-                               box_size=10,
-                               border=0)
-            qr.add_data(msg1)
-            qr.make(fit=True)
-            img = qr.make_image(fill_color='blue',
-                                back_color='white')
-
-            img.save('Tickets\{}.png'.format(data[1]))
-            msg = msg + msg1
-            pdf.add_page()
-            pdf.set_font('Arial', size=15)
-            pdf.multi_cell(w=200, h=10, txt=msg)
+        try:
             msg1 = ''
             msg = "IRCTC\n\n\nYour Ticket is Confirmed\nBooking date:-{}\n".format(
                 datetime.date.today().strftime("%d-%m-%y"))
-        pdf.output('Tickets\Tickets.pdf')
-
-        page_number = 0
-        output_file = PdfWriter()
-        with open("Tickets\Tickets.pdf", "rb") as f1:
-            input_file = PdfReader(f1)
+            pdf = FPDF()
             for data in passdata:
-                c = canvas.Canvas('Tickets\{}.pdf'.format(data[1]))
-                c.drawImage('090.png', x=30, y=725, width=100, height=98)
-                c.drawImage('Tickets\{}.png'.format(data[1]), x=397, y=640, width=200, height=160)
-                c.save()
-                with open("Tickets\{}.pdf".format(data[1]), "rb") as f2:
-                    watermark = PdfReader(f2)
-                    page_count = len(input_file.pages)
-                    input_page = input_file.pages[page_number]
-                    input_page.merge_page(watermark.pages[0])
-                    output_file.add_page(input_page)
-                    page_number += 1
-            with open("Tickets\QRTickets.pdf", "wb") as outputStream:
-                output_file.write(outputStream)
+                msg1 = msg1 + "\nPassenger Details:-\nPNR:-{}\nPassenger Name:-{}\nPhone:-{}\nAge:-{}\nGender:-{}\nAadhar:-{}\nSeat No:-{}\n\nPayment Method:-{}\n".format(
+                    data[0],
+                    data[1], data[
+                        2], data[3],
+                    data[4],
+                    data[5], data[7], methodcombo.get())
 
-            send = sendpdf('railwayslogin@gmail.com', uemail, 'kijhzjdxvyuxapfi', 'IRCTC TICKET BOOKING',
-                           'TICKETS CONFIRMED', 'QRTickets', 'Tickets\.')
-            send.email_send()
-            reserve(passdata)
-            passdata = []
+                msg1 = msg1 + "\nTrain Details:-\nTrain Name:-{}\nClass:-{}\nSource:-{}\nDestination:-{}\nDate-Time:-{}\nCost:-Rs{}".format(
+                    traindata[0], traindata[1],
+                    traindata[
+                        2], traindata[3],
+                    traindata[4].strftime("%d-%m-%Y %H:%M:%S"), cost)
 
-        filedata = os.listdir('Tickets')
-        for x in filedata:
-            os.remove("Tickets\{}".format(x))
+                qr = qrcode.QRCode(version=1,
+                                   box_size=5,
+                                   border=0)
+                qr.add_data(data[0])
+                qr.make(fit=True)
+                img = qr.make_image(fill_color='blue',
+                                    back_color='white')
 
+                img.save('Tickets\{}.png'.format(data[1]))
+                msg = msg + msg1
+                pdf.add_page()
+                pdf.set_font('Arial', size=15)
+                pdf.multi_cell(w=200, h=10, txt=msg)
+                msg1 = ''
+                msg = "IRCTC\n\n\nYour Ticket is Confirmed\nBooking date:-{}\n".format(
+                    datetime.date.today().strftime("%d-%m-%y"))
+            pdf.output('Tickets\Tickets.pdf')
+
+            page_number = 0
+            output_file = PdfWriter()
+            with open("Tickets\Tickets.pdf", "rb") as f1:
+                input_file = PdfReader(f1)
+                for data in passdata:
+                    c = canvas.Canvas('Tickets\{}.pdf'.format(data[1]))
+                    c.drawImage('090.png', x=30, y=725, width=100, height=98)
+                    c.drawImage('Tickets\{}.png'.format(data[1]), x=397, y=640, width=200, height=160)
+                    c.save()
+                    with open("Tickets\{}.pdf".format(data[1]), "rb") as f2:
+                        watermark = PdfReader(f2)
+                        page_count = len(input_file.pages)
+                        input_page = input_file.pages[page_number]
+                        input_page.merge_page(watermark.pages[0])
+                        output_file.add_page(input_page)
+                        page_number += 1
+                with open("Tickets\QRTickets.pdf", "wb") as outputStream:
+                    output_file.write(outputStream)
+
+                send = sendpdf('railwayslogin@gmail.com', uemail, 'kijhzjdxvyuxapfi', 'IRCTC TICKET BOOKING',
+                               'TICKETS CONFIRMED', 'QRTickets', 'Tickets\.')
+                send.email_send()
+                reserve(passdata)
+                passdata = []
+                bg = ImageTk.PhotoImage(Image.open("005.jpg"))
+                mainframe = Frame(root, bg='white')
+                mainframe.place(x=0, y=0)
+                label1 = Label(mainframe, image=bg)
+                label1.pack()
+                framebg = Frame(mainframe, bg='white')
+                framebg.place(x=80, y=100, relheight=0.8, relwidth=0.8)
+                label = Label(framebg, text='Tickets Confirmed! You will Recieve Tickets on Registerd Email Address',
+                          font=('Arial', 20), bg='white')
+                label.place(x=30, y=200)
+                backbut = Button(mainframe, text="Back", bd=3, bg='white', command=afterlogin)
+                backbut.place(x=850, y=600)
+                back('LOGOUT')
+
+            filedata = os.listdir('Tickets')
+            for x in filedata:
+                os.remove("Tickets\{}".format(x))
+        except smtplib.socket.gaierror:
+            messagebox.showinfo('', 'Please Check Your Internet Connection')
+    
     else:
         messagebox.showinfo('', 'Select Payment Method!!')
     root.mainloop()
-
 
 def reserve(passdata):
     reservedata = []
@@ -648,47 +652,47 @@ def cancle():
 
 
 def confirmcancle(cancleentry):
-    ans = messagebox.askyesno('', 'Are You sure you want to cancle your Ticket ??')
-    if (ans):
-        flag = 0
-        lemail = [uemail]
-        cursor.execute("use railways;")
-        q1 = "select r.pnr from reserves r,passenger p where r.pnr=p.pnr and p.email=%s"
-        pnr = [cancleentry.get()]
-        global canpnr
-        canpnr = pnr[0]
-        cursor.execute(q1, lemail)
-        candata = cursor.fetchall()
-        count = len(candata)
-        for data in candata:
-            for i in data:
-                if pnr[0] == i:
-                    flag = 1
-        if (flag == 1):
-            q = "update reserves set status='Cancled' where pnr=%s"
-            cursor.execute(q, pnr)
-            cursor.execute("commit;")
-            q = 'insert into cancles(cid,pnr) values(%s,%s)'
-            data = [ticketno(), pnr[0]]
-            cursor.execute(q, data)
-            cursor.execute("commit;")
-            bg = ImageTk.PhotoImage(Image.open("005.jpg"))
-            mainframe = Frame(root, bg='white')
-            mainframe.place(x=0, y=0)
-            label1 = Label(mainframe, image=bg)
-            label1.pack()
-            framebg = Frame(mainframe, bg='white')
-            framebg.place(x=80, y=100, relheight=0.8, relwidth=0.8)
-            label = Label(framebg, text='Tickets Cancled !! You will Recieve Messeage on your Email Address',
-                          font=('Arial', 20), bg='white')
-            label.place(x=30, y=200)
-            cancleemail()
-            backbut = Button(mainframe, text="Back", bd=3, bg='white', command=afterlogin)
-            backbut.place(x=850, y=600)
-            back('LOGOUT')
-            root.mainloop()
-        else:
-            messagebox.showinfo("", "Incorrect PNR,Please Re-Check")
+    flag = 0
+    lemail = [uemail]
+    cursor.execute("use railways;")
+    q1 = "select r.pnr from reserves r,passenger p where r.pnr=p.pnr and p.email=%s"
+    pnr = [cancleentry.get()]
+    global canpnr
+    canpnr = pnr[0]
+    cursor.execute(q1, lemail)
+    candata = cursor.fetchall()
+    count = len(candata)
+    for data in candata:
+        for i in data:
+            if pnr[0] == i:
+                flag = 1
+    if (flag == 1):
+        ans = messagebox.askyesno('', 'Are You sure you want to cancle your Ticket ??')
+    else:
+        messagebox.showinfo("", "Incorrect PNR,Please Re-Check")
+    if(ans):
+        q = "update reserves set status='Cancled' where pnr=%s"
+        cursor.execute(q, pnr)
+        cursor.execute("commit;")
+        q = 'insert into cancles(cid,pnr) values(%s,%s)'
+        data = [ticketno(), pnr[0]]
+        cursor.execute(q, data)
+        cursor.execute("commit;")
+        bg = ImageTk.PhotoImage(Image.open("005.jpg"))
+        mainframe = Frame(root, bg='white')
+        mainframe.place(x=0, y=0)
+        label1 = Label(mainframe, image=bg)
+        label1.pack()
+        framebg = Frame(mainframe, bg='white')
+        framebg.place(x=80, y=100, relheight=0.8, relwidth=0.8)
+        label = Label(framebg, text='Tickets Cancled !! You will Recieve Messeage on your Email Address',
+                      font=('Arial', 20), bg='white')
+        label.place(x=30, y=200)
+        cancleemail()
+        backbut = Button(mainframe, text="Back", bd=3, bg='white', command=afterlogin)
+        backbut.place(x=850, y=600)
+        back('LOGOUT')
+        root.mainloop()
     else:
         return
 
@@ -865,7 +869,7 @@ def mainscreen():
     label2.place(x=320, y=0)
     root.title("Railways Reservations")
 
-    root.geometry("1200x780")
+    root.geometry("1200x700")
     register = Button(framebg, text="Register", command=register1, bg='white', font=("Arial", 15), height=2, width=20,
                       bd=3)
     register.place(x=70, y=60)
@@ -911,7 +915,7 @@ label2 = Label(root, text='Online Railways Ticket Booking Application', bg='whit
 label2.place(x=320, y=0)
 root.title("Railways Reservations")
 
-root.geometry("1200x780")
+root.geometry("1200x700")
 register = Button(framebg, text="Register", command=register1, bg='white', font=("Arial", 15), height=2, width=20,
                   bd=3).place(x=70, y=60)
 loginbut = Button(framebg, text="Login", command=login, bg='white', font=("Arial", 15), height=2, width=20, bd=3).place(
